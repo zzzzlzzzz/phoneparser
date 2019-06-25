@@ -42,13 +42,7 @@ class TelGrab:
 
         return url, numbers
 
-    def parse_list(self, urls: 'list', chunksize: 'int' = 1, cores: 'int' = None):
-        try:
-            pool = Pool(cores)
-            for item in pool.imap(self.parse, urls, chunksize):
+    def parse_list(self, urls: 'list', chunksize: 'int' = 1, cores: 'int' = None) -> 'tuple':
+        with Pool(cores) as pool:
+            for item in pool.imap_unordered(self.parse, urls, chunksize):
                 yield item
-            pool.close()
-            pool.join()
-            return
-        except:
-            return
